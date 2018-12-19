@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- <mapper namespace="userNameSpace"> <mapper namespace="com.biz.mapper.MemberMapper"> -->
+<mapper namespace="aucSpace">
+	
+	<resultMap id="auc_pic_1n" type="com.reum.auc.AuctionVO" 
+			extends="aucMap">
+			<collection property="plist" resultMap="aucPicMap"/>
+	</resultMap>
+
+	<resultMap id="auc_pic_11" type="com.reum.auc.AuctionVO" 
+			extends="aucMap">
+			<association property="auctionPicVO" resultMap="aucPicMap"/>
+	</resultMap>
+	
+	<resultMap id="aucMap" type="com.reum.auc.AuctionVO">
+		<id property="aucSeq" column="auc_seq" />
+		<result property="aucDescription" column="auc_description" />
+		<result property="aucStartdate" column="auc_startdate" />
+		<result property="aucEnddate" column="auc_enddate" />
+		<result property="aucBuyitnow" column="auc_buyitnow" />
+		<result property="aucName" column="auc_name" />
+		<result property="aucStartbid" column="auc_startbid" />
+		<result property="aucMinprice" column="auc_minprice" />
+		<result property="aucStatus" column="auc_status" />
+		<result property="cateSeq" column="cate_seq" />
+		<result property="aucSellerSeq" column="seller_seq" />
+		<result property="aucSellerID" column="seller_id" />
+		<result property="maxPrice" column="max_bid_price" />
+		<result property="bidderSeq" column="bidder_seq" />
+		<result property="bidderID" column="bidder_id" />
+		<result property="bidDate" column="bid_dateuser" />
+		<result property="bids" column="bids_count" />
+		<result property="bidders" column="bidders" />
+	</resultMap>
+	
+	<resultMap id="aucPicMap" type="com.reum.auc.AuctionPicVO">
+			<id property="aucPseq" column="product_attach_seq" />
+			<result property="aucPpath" column="product_attach_ppath" />
+			<result property="aucPname" column="product_attach_pname" />
+			<result property="aucSysname" column="product_attach_sysname" />
+			<result property="aucMainPic" column="product_attach_main" />
+			<result property="aucSeq" column="auc_seq" />
+	</resultMap>
+	
+
+</mapper>	

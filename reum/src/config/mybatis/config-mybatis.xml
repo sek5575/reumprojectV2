@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>  
+   <!--/bt_prj/src/config/mybatis -->
+   <properties resource="config/mybatis/oracle.properties" />
+   
+    <!--  oracle null 처리  -->
+    <settings>
+        <setting name="cacheEnabled" value="false" />
+        <setting name="jdbcTypeForNull" value="NULL" />
+    </settings>
+    
+    <!-- TypeAliases 별명--> 
+   <typeAliases>
+      <typeAlias alias="ProductVO" type="com.reum.product.ProductVO"  />
+   </typeAliases>
+
+   <!-- DBCP : DataBase Connetion Pool-->
+   <environments default="development">
+      <environment id="development">
+         <transactionManager type="JDBC" />
+         <dataSource type="POOLED">
+            <property name="driver" value="${driver}" />
+            <property name="url" value="${url}" />
+            <property name="username" value="${id}" />
+            <property name="password" value="${pw}" />
+         </dataSource>
+      </environment>
+   </environments>
+   
+   
+   <!-- mapper --> 
+   <mappers>
+      <mapper resource="config/mybatis/product_map.xml" /> 
+      <mapper resource="config/mybatis/users_map.xml" /> 
+      <!-- <mapper resource="config/mybatis/auc_map.xml" /> -->       
+   </mappers>
+   
+
+</configuration>

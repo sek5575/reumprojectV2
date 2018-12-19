@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--  
+<mapper namespace="userNameSpace"> 
+<mapper namespace="com.biz.mapper.UserMap">
+-->
+
+<mapper namespace="usersSpace">
+		<resultMap id="usersMap" type="com.reum.users.UsersVO">
+		<result property="userSeq" 				column="user_seq" />
+		<result property="userId" 				column="user_id" />
+		<result property="userPw" 				column="user_pw" />
+		<result property="userRegdate" 			column="user_regdate" />
+		<result property="userName" 			column="user_name" />
+		<result property="userEmail" 			column="user_email" />
+		<result property="userPost" 			column="user_post" />
+		<result property="userPhone" 			column="user_phone" />
+		<result property="userPpath" 			column="user_ppath" />
+		<result property="userAddress" 			column="user_address" />
+		<result property="userDetailAddress" 	column="user_detail_address" />
+		<result property="userGubun" 			column="user_gubun" />
+		<result property="userLat" 				column="user_lat" />
+		<result property="userLng" 				column="user_lng" />
+		<result property="userDel" 				column="user_del" />
+		<result property="gradeSeq" 			column="grade_seq" />
+	</resultMap>
+	
+	
+
+	<select id="login" 
+			parameterType="com.reum.users.UsersVO"  
+			resultMap="usersMap">
+ 			select *
+ 			from users
+			where user_id=#{userId} and user_pw=#{userPw} 
+			and user_del='n'
+ 	</select>
+ 	
+	<select id="forgotid"
+ 			parameterType="com.reum.users.UsersVO"  
+			resultMap="usersMap">
+ 			select user_seq
+			from users
+			where user_phone=#{userPhone};
+	</select>
+	
+	<!-- seller에 insert 하기 위해서 만든 select -->
+	<select id="selectUserSeq"
+			parameterType="String"
+			resultMap="usersMap">
+			select user_seq
+			from users
+			where user_id = #{value}
+	</select>
+	
+	<!-- 수정하기 버튼 세션아이디와 비교를 위해서 select -->
+	<select id="selectSellerId"
+			parameterType="int"
+			resultMap="usersMap">
+			select user_id
+			from users
+			where user_seq = #{value}
+	</select>
+			
+ 	
+</mapper>	

@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="productSpace">
+
+	<resultMap id="product_pic_1n" type="com.reum.product.ProductVO" 
+		extends="productMap">
+			<collection property="pvolist" resultMap="productPicMap"/>
+	</resultMap>
+
+	<resultMap id="product_pic_11" type="com.reum.product.ProductVO" 
+			extends="productMap">
+			<association property="productPicVO" resultMap="productPicMap"/>
+	</resultMap>
+
+	<resultMap id="productMap" type="com.reum.product.ProductVO">
+		<!-- <id property="productSeq" column="product_seq" /> -->
+		<result property="productSeq"	   		column="product_seq" />
+		<result property="productName" 	  	    column="product_name" />
+		<result property="productRegdate"  	    column="product_regdate" />
+		<result property="productDescription"   column="product_description" />
+		<result property="productPrice" 		column="product_price" />
+		<result property="productStatus" 		column="product_status" />
+		<result property="productDel" 			column="product_del" />
+		<result property="locSeq" 				column="loc_seq" />
+		<result property="locName" 				column="loc_name" />
+		<result property="cateSeq" 				column="cate_seq" />
+	</resultMap>
+	
+	<resultMap id="productPicMap" type="com.reum.product.ProductPicVO">
+		<result property="productAttachSeq"	    column="product_attach_seq" />
+		<result property="productSeq" 	  	    column="product_seq" />
+		<result property="productAttachPpath"  	column="product_attach_ppath" />
+		<result property="productAttachPname"   column="product_attach_pname" />
+		<result property="productAttachSysname" column="product_attach_sysname" />
+		<result property="productAttachGubun" 	column="product_attach_gubun" />
+		<result property="productAttachMain" 	column="product_attach_main" />
+		<result property="aucSeq" 				column="auc_seq" />
+	</resultMap>
+	
+	<resultMap id="productReplyMap" type="com.reum.product.ProductReplyVO">
+		<result property="productReplySeq"	   		column="product_reply_seq" />
+		<result property="productReplyContent" 		column="product_reply_content" />
+		<result property="productReplyRegdate"  	column="product_reply_regdate" />
+		<result property="productReplyDel"   		column="product_reply_del" />
+		<result property="userSeq"					column="user_seq" />
+		<result property="productSeq" 				column="product_seq" />
+		<result property="userId"					column="user_id" />
+		<result property="rownum" 					column="rownum" />
+		<result property="productReplyPassword"		column="product_reply_password "/>
+	</resultMap>
+	
+	<resultMap id="productEvalMap" type="com.reum.product.ProductEvalVO">
+		<result property="userevalSeq"	   	column="usereval_seq" />
+		<result property="oredererSeq" 		column="orderer_seq" />
+		<result property="orderSeq"  		column="order_seq" />
+		<result property="userevalScore"   column="usereval_score" />
+		<result property="userevalContent"	column="usereval_content" />
+		<result property="userevalRegdate" column="usereval_regdate" />
+		<result property="userId" 			column="user_id" />		
+	</resultMap>
+	
+	<resultMap id="cateGoryMap" type="com.reum.product.CateGoryVO">
+		<result property="cateSeq"	   		column="cate_seq" />
+		<result property="cateParentSeq" 	column="cate_parent_seq" />
+		<result property="cateName"  		column="cate_name" />	
+	</resultMap>
+	
+	<resultMap id="sellerMap" type="com.reum.product.SellerVO">
+		<result property="sellerSeq"	   		column="seller_seq" />
+		<result property="productSeq" 	column="product_seq" />
+	</resultMap>
+	
+	
+
+	<!-- 상품메인에 보일 설명 & 대표사진 -->
+	<select id="selectDetail" parameterType="int" resultMap="product_pic_11">	
+			select p.product_seq, p.product_name, p.product_price,
+			 pa.product_attach_sysname, pa.product_attach_ppath, pa.product_attach_pname, l.loc_name
+			from product p, product_attach pa, location l
+			where p.product_seq = pa.product_seq 
+     		and p.product_seq = #{value} 
+      		and pa.product_attach_main = 'y' 
+      		and p.loc_seq = l.loc_seq
+	</select>
+	
+	<!-- 상품상세 설명 & 첨부 사진 -->
+	<select id="selectDescription" parameterType="int" resultMap="product_pic_1n">	
+			select p.product_description,
+					pa.product_attach_sysname, pa.product_attach_ppath, pa.product_attach_main, pa.product_attach_pname, pa.product_attach_seq
+			from product p, product_attach pa
+			where p.product_seq = pa.product_seq and
+					p.product_seq = #{value} and pa.product_attach_main='n'
+	</select>
+	
+	<!-- 상품 삭제 -->
+	<update id="productDelete" parameterType="com.reum.product.ProductVO">
+ 		update product
+		set product_del = #{productDel}
+		where product_seq = #{productSeq}
+ 	</update>  <!-- product_seq는  -->
+	
+	<!-- 댓글 가져오기 -->
+	<select id="selectReply" parameterType="int" resultMap="productReplyMap">	
+			 select u.user_id, pr.product_reply_content, pr.product_reply_regdate, pr.product_reply_seq
+                 from product p, product_reply pr, users u
+                 where pr.product_seq = p.product_seq and u.user_seq = pr.user_seq and pr.product_seq = #{value}
+                 order by pr.product_reply_regdate
+	</select>
+	
+	<!-- 댓글 입력 -->
+	<insert id="insertReply" parameterType="com.reum.product.ProductReplyVO">
+		insert 
+		into product_reply(product_reply_seq, product_reply_content, product_reply_regdate,
+						 product_reply_del, user_seq, product_seq)
+				values(product_reply_seq.nextval, #{productReplyContent}, sysdate,
+						 'n', #{userSeq}, #{productSeq})
+	</insert>
+	
+	<!-- 댓글 수정 -->
+	<update id="updateReply" parameterType="com.reum.product.ProductReplyVO">
+ 		update product_reply
+		set product_reply_content =  #{productReplyContent},
+    	product_reply_regdate = sysdate
+		where product_reply_seq = #{productReplySeq} 
+ 	</update>  <!-- product_seq는  -->
+ 	
+ 	<!-- 수정된 해당 댓글 가져오기 -->
+	<select id="RelevantReply" parameterType="int" resultMap="productReplyMap">	
+		select product_reply_seq, product_reply_content
+		from product_reply
+		where product_reply_seq = #{value}
+	</select>
+	
+	<!-- 판매자 평가 문제가 있다..  평점 -->
+	<select id="selectEval" parameterType="int" resultMap="productEvalMap">
+			select uv.usereval_score, uv.usereval_content, u.user_id, uv.usereval_regdate
+			from product p, seller s, users u, usereval uv
+			where s.product_seq = p.product_seq and s.product_seq = u.user_seq
+				and uv.orderer_seq = u.user_seq and p.product_seq = #{value}
+	</select>
+	
+	<!-- 사진insert할때 필요한 seq의 마지막번호 찾는 select -->
+	<select id="selectNextSseq" resultType="int">
+		select max(product_attach_seq)+1 as product_attach_seq from product_attach
+	</select>
+	
+	<!-- 상품을 등록할때 필요한 사진에 넣어줄  seq 번호 찾는 select -->
+	<select id="selectMaxSeq" resultType="int">
+		select max(product_seq) as product_seq from product
+	</select>
+	
+	<!-- 사진이외 모든 정보 입력 -->
+	<insert id="insertProductInfo"
+		parameterType="com.reum.product.ProductVO">
+		insert 
+		into product(product_seq, product_name, product_regdate, product_description,
+					product_price, product_status, product_del, loc_seq, cate_seq)
+		values(product_seq.nextval, #{productName}, sysdate, #{productDescription},
+				#{productPrice}, 'c', 'n', #{locSeq}, #{cateSeq})
+	</insert>
+	
+	<!-- 사진정보 입력 -->
+	<insert id="insertProductPic"
+		parameterType="com.reum.product.ProductPicVO">
+		insert 
+		into product_attach(product_attach_seq, product_seq, product_attach_ppath, product_attach_pname,
+					product_attach_sysname, product_attach_gubun, product_attach_main)
+		values(product_attach_seq.nextval, #{productSeq}, #{productAttachPpath}, #{productAttachPname},
+				#{productAttachSysname}, 'p', #{productAttachMain})
+	</insert>
+	
+	<!-- seller정보 입력 --><!-- 직접 insert를 해서 넣어야하는건가?? -->
+	<insert id="insertSeller"
+		parameterType="com.reum.product.SellerVO">
+		insert into 
+			seller(seller_seq, product_seq)
+			values(#{sellerSeq}, #{productSeq})
+	</insert>
+	
+	<!-- 카테고리 선택을 위한 select  -->
+	<select id="selectCate" parameterType="int" resultMap="cateGoryMap">	
+		select c1.cate_name, c1.cate_seq
+  		from category c, category c1
+ 		where c.cate_seq = c1.cate_parent_seq and c.cate_seq = #{cateSeq}
+	</select>
+	
+	<!-- 상품일반 내역 수정 -->
+	<update id="productUpdate" parameterType="com.reum.product.ProductVO">
+ 		update product set
+        product_name = #{productName},
+        product_regdate = sysdate,
+        product_description = #{productDescription},
+		product_price = #{productPrice},
+        loc_seq = #{locSeq},
+        cate_seq = #{cateSeq}
+		where product_seq = #{productSeq} and product_del = 'n' and product_status = 'c'
+ 	</update>  <!-- product_seq는  -->
+ 	
+
+
+
+	<update id="productOrigin" parameterType="com.reum.product.ProductPicVO">
+ 		update product_attach
+		set product_attach_pname = #{productAttachPname},
+    	product_attach_sysname = #{productAttachSysname}
+		where product_attach_main = #{productAttachMain} and product_attach_seq = #{productAttachSeq}
+ 	</update> <!-- seq 추가... -->
+	
+	<select id="selectMainYN" parameterType="String" resultMap="productPicMap">
+		select product_attach_main
+		from product_attach
+		where product_attach_sysname = #{value}
+	</select>
+	
+	
+	
+	
+	<!-- 첨부사진 seq 가져오기 -->
+	<select id="selectAttachSeq" parameterType="int" resultMap="productPicMap">
+		select p.product_seq, pa.product_attach_main
+		from product_attach pa, product p
+		where pa.product_seq = p.product_seq and pa.product_attach_main='n' and p.product_seq=#{value}
+	</select>
+	
+	<!-- 메인사진 seq 가져오기 -->
+	<select id="selectMainSeq" parameterType="int" resultMap="productPicMap">
+		select p.product_seq, pa.product_attach_main
+		from product_attach pa, product p
+		where pa.product_seq = p.product_seq and pa.product_attach_main='y' and p.product_seq=#{value}
+	</select>
+	
+	<!-- 모든사진 seq 가져오기 -->
+	<select id="selectAllPicSeq" parameterType="int" resultMap="productPicMap">
+		select p.product_seq, pa.product_attach_main
+		from product_attach pa, product p
+		where pa.product_seq = p.product_seq and p.product_seq=#{value}
+	</select>
+	
+	<!-- 상품 사진 수정 -->
+	<update id="productPicChange" parameterType="com.reum.product.ProductPicVO">
+		update product_attach
+    	set product_attach_main = 'c'
+    	where product_attach_main = #{productAttachMain} and product_seq = #{productSeq}
+	</update>
+	
+	<!-- seller의 seq 가져오기 -->
+	<select id="selectSeller" parameterType="int" resultMap="sellerMap">
+		select seller_seq
+		from seller
+		where product_seq = #{value}
+	</select>
+	
+	
+	
+	
+
+</mapper>	
