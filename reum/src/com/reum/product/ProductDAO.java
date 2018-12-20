@@ -25,7 +25,11 @@ public class ProductDAO {
 		return list;	
 	}
 	
-//	public productDelete
+	public int productDelete(ProductVO vo, SqlSession PRMCONN) {
+		int	res = PRMCONN.update("productSpace.productDelete", vo);
+		PRMCONN.commit();
+		return res;
+	}
 
 	public int insertReply(ProductReplyVO vo) {
 		SqlSession conn = null;
@@ -40,32 +44,18 @@ public class ProductDAO {
 		return res;
 	}
 	
-	public int updateReply(ProductReplyVO vo) {
-		SqlSession conn = null;
-		int res=0;
-		try {
-			conn = MyBatisFactory.getFactory().openSession();
-			res = conn.update("productSpace.updateReply", vo);
-			conn.commit();
-		} finally{
-			conn.close();
-		}
+	public int updateReply(ProductReplyVO vo, SqlSession PRMCONN) {
+			int res = PRMCONN.update("productSpace.updateReply", vo);
+			PRMCONN.commit();
 		return res;
 	}
 	
-	public ProductReplyVO RelevantReply(int seq) {
-		SqlSession conn = null;
-		ProductReplyVO vo = null;
-		try {
-			conn = MyBatisFactory.getFactory().openSession();
-			vo = conn.selectOne("productSpace.RelevantReply", seq);
-			conn.commit();
-		} finally{
-			conn.close();
-		}
-		return vo;
+	public int deleteReply(int seq, SqlSession PRMCONN) {
+			int res = PRMCONN.update("productSpace.deleteReply", seq);
+			PRMCONN.commit();
+		return res;
 	}
-	
+		
 	public ArrayList<ProductEvalVO> selectEval(int seq, SqlSession PRMCONN) {
 		ArrayList<ProductEvalVO> list = (ArrayList)PRMCONN.selectList("productSpace.selectEval", seq);
 		return list;	

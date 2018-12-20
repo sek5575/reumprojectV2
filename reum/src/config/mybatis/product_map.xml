@@ -75,7 +75,7 @@
 
 	<!-- 상품메인에 보일 설명 & 대표사진 -->
 	<select id="selectDetail" parameterType="int" resultMap="product_pic_11">	
-			select p.product_seq, p.product_name, p.product_price,
+			select p.product_seq, p.product_name, p.product_price, p.product_del,
 			 pa.product_attach_sysname, pa.product_attach_ppath, pa.product_attach_pname, l.loc_name
 			from product p, product_attach pa, location l
 			where p.product_seq = pa.product_seq 
@@ -96,7 +96,8 @@
 	<!-- 상품 삭제 -->
 	<update id="productDelete" parameterType="com.reum.product.ProductVO">
  		update product
-		set product_del = #{productDel}
+		set product_del = 'y',
+			product_status = 'f'
 		where product_seq = #{productSeq}
  	</update>  <!-- product_seq는  -->
 	
@@ -104,7 +105,7 @@
 	<select id="selectReply" parameterType="int" resultMap="productReplyMap">	
 			 select u.user_id, pr.product_reply_content, pr.product_reply_regdate, pr.product_reply_seq
                  from product p, product_reply pr, users u
-                 where pr.product_seq = p.product_seq and u.user_seq = pr.user_seq and pr.product_seq = #{value}
+                 where pr.product_seq = p.product_seq and u.user_seq = pr.user_seq and pr.product_seq = #{value} and pr.product_reply_del = 'n'
                  order by pr.product_reply_regdate
 	</select>
 	
@@ -120,17 +121,16 @@
 	<!-- 댓글 수정 -->
 	<update id="updateReply" parameterType="com.reum.product.ProductReplyVO">
  		update product_reply
-		set product_reply_content =  #{productReplyContent},
-    	product_reply_regdate = sysdate
+		set product_reply_content = #{productReplyContent}
 		where product_reply_seq = #{productReplySeq} 
  	</update>  <!-- product_seq는  -->
  	
- 	<!-- 수정된 해당 댓글 가져오기 -->
-	<select id="RelevantReply" parameterType="int" resultMap="productReplyMap">	
-		select product_reply_seq, product_reply_content
-		from product_reply
+ 	<!-- 댓글 삭제 -->
+	<update id="deleteReply" parameterType="int">
+ 		update product_reply
+		set product_reply_del = 'y'
 		where product_reply_seq = #{value}
-	</select>
+ 	</update>  <!-- product_seq는  -->
 	
 	<!-- 판매자 평가 문제가 있다..  평점 -->
 	<select id="selectEval" parameterType="int" resultMap="productEvalMap">

@@ -16,6 +16,7 @@
 <!-- Header Include CSS END-->
 <script>
 $(document).ready(function(){
+	
 	//댓글 입력버튼 이벤트
 	$("#replybtn").click(function(){
 		  		var userSeq = ${sessionScope.SESS_SEQ};
@@ -43,7 +44,7 @@ $(document).ready(function(){
 						        	htmlStr += "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp;";
 						        	htmlStr += "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"; 
 						        			if(vv.sessionId == vv.userId){
-								        		htmlStr += "<font color='#666'><span name='"+vv.productReplySeq+"^^^"+vv.productReplyContent+"' class='replyEdit'>수정</span> | <a href='#' onClick=''>삭제</a></font>";
+								        		htmlStr += "<font color='#666'><span name='"+vv.productReplySeq+"^^^"+vv.productReplyContent+"' class='replyEdit'>수정</span> | <span name='"+vv.productReplySeq+"' class='replyDelete'>삭제</span></font>";
 								        	}
 								    htmlStr += "</li>";
 								    htmlStr += "<li>";
@@ -61,51 +62,146 @@ $(document).ready(function(){
 							  	$("#reply_list").html(htmlStr);
 							  	$("#replybtn").val(""); //왜 안비워지지?
 							}
-				}); //end of ajax 
+				}); //end of ajax
+		
   	});
 		
-		//수정버튼 활성화
+		//"수정버튼" 클릭시 text로 활성화
 		$(document).on("click",".replyEdit",function(){ //글쓰기 버튼 --> 눌렀을 때 기존의 있는 내용을 불러오고 text로 활성화 된다.
 			var names = $(this).attr("name");
 			var arr = names.split("^^^");
 			//alert(arr[0] +","+arr[1]);
 			//입력된 글이 들어와야한다..!!!
-			var htmlStr = "<input type='text' style='border: none;  background-color: #FFFFFF;  font-size:12px; font-color:#666; word-wrap: break-word; width:600px;' name='' id='updateContent' value='"+arr[1]+"'> ";	
-			htmlStr += "<span onClick=\"replyEditSubmit('"+arr[0]+"','"+$("#updateContent").data()+"')\" class='replyEditSubmit' name=''><img  src='https://cafe.pstatic.net/cafe4/ico-btn-write.gif' width='10' height='10' alt=''>글쓰기</span>";
+			var htmlStr = "<input type='hidden' id='updateReplySeq' value='"+arr[0]+"'>";
+			htmlStr += "<input type='text' style='border: none;  background-color: #FFFFFF;  font-size:12px; font-color:#666; word-wrap: break-word; width:600px;' name='' id='updateReplyContent' value='"+arr[1]+"'> ";	
+			htmlStr += "<span onClick=\"replyEditSubmit(this)\" class='replyEditSubmit' name=''><img  src='https://cafe.pstatic.net/cafe4/ico-btn-write.gif' width='10' height='10' alt=''>글쓰기</span>";
 			
 			$("#reply_input_span"+arr[0]).empty();
 			$("#reply_input_span"+arr[0]).html(htmlStr);
 		});
 		
+		//"삭제버튼" 클릭시 삭제가 된다. 삭제된 댓글 이외의 글 ajax으로
+		$(document).on("click",".replyDelete",function(){ 
+			var name = $(this).attr("name");
+			var sendData = {"productReplySeq":name, "productSeq":${Product_VO.productSeq}};
+			console.log(sendData);
+			//alert(name);
+			$.ajax({ 
+				url:"/productReplyUpdateServlet",
+				type:"post",
+				contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+				data:JSON.stringify(sendData),
+				success:function(gsonObj){
+						console.log(gsonObj);
+						var htmlStr = "";
+						htmlStr += "<div  style='background-color:#f9f9f9'>";
+			 			$.map(gsonObj, function(vv, idx){			 				
+			        	htmlStr += "<ul style='list-style:none;'>";
+			        	htmlStr += "<li style='height:6px'></li>";
+			        	htmlStr += "<li>";
+			        	htmlStr += "<img src='https://ssl.pstatic.net/static/cafe/cafe_pc/default/cafe_profile_77.png' width='32' height='32' alt='프로필' onerror='this.onerror=''; this.src=\"'https://ssl.pstatic.net/static/cafe/cafe_pc/default/cafe_profile_77.png'\">";
+			        	htmlStr += "&nbsp; &nbsp; <font style='color: #666;word-wrap: break-word;'><b>"+vv.userId+"</b></font>";
+			        	htmlStr += "<font color='#f9f9f9'>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </font>";
+			        	htmlStr += "<font style='color: #666;word-wrap: break-word;'>"+vv.productReplyRegdate+"</font>";
+			        	htmlStr += "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp;";
+			        	htmlStr += "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp;";
+			        	htmlStr += "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"; 
+			        			if(vv.sessionId == vv.userId){
+					        		htmlStr += "<font color='#666'><span name='"+vv.productReplySeq+"^^^"+vv.productReplyContent+"' class='replyEdit'>수정</span> | <span name='"+vv.productReplySeq+"' class='replyDelete'>삭제</span></font>";
+					        	}
+					    htmlStr += "</li>";
+					    htmlStr += "<li>";
+					    htmlStr += "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;";
+					    htmlStr += "<span id='reply_input_span"+vv.productReplySeq+"'>"+vv.productReplyContent+"</span>";
+					    htmlStr += "</li>";
+					    htmlStr += "</ul>";
+					    htmlStr += "<li style='list-style:none;'>&nbsp; &nbsp; <img src='/themes/images/dot_line.png' ></li>";
+
+				  	});
+			 			htmlStr += "</div>";
+				  	
+				  	//div는 남겨두고 기존 댓글 내용만 지우기
+				  	$("#reply_list").empty();
+				  	$("#reply_list").html(htmlStr);
+				  	$("#replybtn").val(""); //왜 안비워지지?
+				}
+				}); //end of ajax
+			
+			
+		});
+		
 });
 
-
-function replyEditSubmit(seq, reply){
+/* 수정된 댓글 뿌려주는 ajax  */
+function replyEditSubmit(){
+	var updateReplyContent = $("#updateReplyContent").val();
+	var updateReplySeq = $("#updateReplySeq").val();
 	//ajax
-	alert(seq +","+reply);
-	var sendData = {"productReplyContent":reply, "productReplySeq":seq};	
+	//alert(updateReplyContent +","+updateReplySeq);
+	var sendData = {"productReplyContent":updateReplyContent, "productReplySeq":updateReplySeq, "productSeq":${Product_VO.productSeq}};	
 	console.log(sendData);
-	$("#reply_input_span"+seq).empty();
-	var htmlStr = "";
+	$("#reply_input_span"+updateReplySeq).empty();
 	
+	var htmlStr = "";
 	 $.ajax({ 
 			url:"/productReplyUpdateServlet",
 			type:"post",
 			contentType: "application/x-www-form-urlencoded; charset=UTF-8",
 			data:JSON.stringify(sendData),
 			success:function(gsonObj){
-					console.log(gsonObj);
-		 			$.map(gsonObj, function(vv, idx){	
-		        	htmlStr += "<li>";
-		        	htmlStr += "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"; 
-		        	htmlStr += "<span id='reply_input_span"+vv.productReplySeq+"'>"+vv.productReplyContent+"</span>";
-		        	htmlStr += "</li>";
-			  	});
-			}
+				console.log(gsonObj);
+				var htmlStr = "";
+				htmlStr += "<div  style='background-color:#f9f9f9'>";
+	 			$.map(gsonObj, function(vv, idx){			 				
+	        	htmlStr += "<ul style='list-style:none;'>";
+	        	htmlStr += "<li style='height:6px'></li>";
+	        	htmlStr += "<li>";
+	        	htmlStr += "<img src='https://ssl.pstatic.net/static/cafe/cafe_pc/default/cafe_profile_77.png' width='32' height='32' alt='프로필' onerror='this.onerror=''; this.src=\"'https://ssl.pstatic.net/static/cafe/cafe_pc/default/cafe_profile_77.png'\">";
+	        	htmlStr += "&nbsp; &nbsp; <font style='color: #666;word-wrap: break-word;'><b>"+vv.userId+"</b></font>";
+	        	htmlStr += "<font color='#f9f9f9'>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </font>";
+	        	htmlStr += "<font style='color: #666;word-wrap: break-word;'>"+vv.productReplyRegdate+"</font>";
+	        	htmlStr += "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp;";
+	        	htmlStr += "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp;";
+	        	htmlStr += "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"; 
+	        			if(vv.sessionId == vv.userId){
+			        		htmlStr += "<font color='#666'><span name='"+vv.productReplySeq+"^^^"+vv.productReplyContent+"' class='replyEdit'>수정</span> | <span name='"+vv.productReplySeq+"' class='replyDelete'>삭제</span></font>";
+			        	}
+			    htmlStr += "</li>";
+			    htmlStr += "<li>";
+			    htmlStr += "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;";
+			    htmlStr += "<span id='reply_input_span"+vv.productReplySeq+"'>"+vv.productReplyContent+"</span>";
+			    htmlStr += "</li>";
+			    htmlStr += "</ul>";
+			    htmlStr += "<li style='list-style:none;'>&nbsp; &nbsp; <img src='/themes/images/dot_line.png' ></li>";
+
+		  	});
+	 			htmlStr += "</div>";
+		  	
+		  	//div는 남겨두고 기존 댓글 내용만 지우기
+		  	$("#reply_list").empty();
+		  	$("#reply_list").html(htmlStr);
+		  	$("#replybtn").val("");
+		}
 	}); //end of ajax 
 	
-	$("#reply_input_span"+seq).html(htmlStr);
+	$("#reply_input_span"+updateReplySeq).html(htmlStr);
+	
 }
+
+ function updateConfirm() {
+ 	if (confirm("정말 수정하시겠습니까??") == true){    //확인
+		location= "/productModifyEntryServlet?product_seq="+${Product_VO.productSeq};
+ 	}else{   //취소
+     	return false;
+ 	}
+}
+ function deleteConfirm() {
+	 if (confirm("정말 삭제하시겠습니까??") == true){    //확인
+		location= "/productDeleteServlet?product_seq="+${Product_VO.productSeq};
+	 }else{   //취소
+	     return false;
+	 }
+ }
 
 </script>
 </head>
@@ -244,15 +340,16 @@ function replyEditSubmit(seq, reply){
 										        	 <c:set var="userID" value= "${reply.userId}"/>
 										        		<c:choose>
 										        		<c:when test="${sessionScope.SESS_ID eq userID}">
-										        		<font color="#666"><span name="${reply.productReplySeq}^^^${reply.productReplyContent}" class="replyEdit">수정</span> | <a href="#" onClick="">삭제</a></font>
+										        		<font color="#666"><span name="${reply.productReplySeq}^^^${reply.productReplyContent}" class="replyEdit">수정</span> | <span name="${reply.productReplySeq}" class="replyDelete">삭제</span></font>
 										        		</c:when>
 									                	</c:choose>
 										        </li>
-										        <li>
+										        
+										        <li id="reply_input_span${reply.productReplySeq}">
 										        		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
 										        		<span id="reply_input_span${reply.productReplySeq}">${reply.productReplyContent}</span>
-									                	
 									            </li>
+									            
 											   </ul>
 										       <li style="list-style:none;">&nbsp; &nbsp; <img src="/themes/images/dot_line.png" ></li>
 										     </c:forEach>
@@ -322,15 +419,13 @@ function replyEditSubmit(seq, reply){
 										<c:set var="sellerID" value= "${Seller_ID.userId}"/>
 										       	<c:choose>
 										       	<c:when test="${sessionScope.SESS_ID eq sellerID}">
-												<button type="button" class="btn btn-primary pull-right"
-												onclick="location.href='/productDeleteServlet?product_seq=${Product_VO.productSeq}'">삭제하기</button>
+												<button type="button" class="btn btn-primary pull-right" id="deleteBt"
+												onclick="deleteConfirm()">삭제하기</button>
 												
-												<button type="button" class="btn btn-primary pull-right"
-												onclick="location.href='/productModifyEntryServlet?product_seq=${Product_VO.productSeq}'">수정하기</button>
+												<button type="button" class="btn btn-primary pull-right" id="updateBt"
+												onclick="updateConfirm()">수정하기</button>
 									           	</c:when>
-												<c:otherwise>
-									          	</c:otherwise>
-								               	</c:choose>
+								        		</c:choose>
 
 									</div>
 									<!-- 상품 상세 사진========================================================================== -->
