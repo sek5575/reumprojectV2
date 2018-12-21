@@ -71,15 +71,63 @@
 		<result property="productSeq" 	column="product_seq" />
 	</resultMap>
 	
+	<resultMap id="locationMap" type="com.reum.product.LocationVO">
+		<result property="locSeq"	column="loc_seq" />
+		<result property="locName" 	column="loc_name" />
+	</resultMap>
 	
-
-	<!-- 상품메인에 보일 설명 & 대표사진 -->
+	<select id="productSearch" parameterType="String" resultMap="product_pic_11">
+		select p.product_seq, p.product_name, p.product_description, p.product_price,
+		nvl(pa.product_attach_sysname, '000.jpg') as product_attach_sysname, l.loc_name, l.loc_seq
+		from product p, product_attach pa, location l
+		where p.product_status = 'c' and p.product_del = 'n'
+		and p.loc_seq = l.loc_seq
+      	and p.product_seq = pa.product_seq
+      	and pa.product_attach_main = 'y'
+      	and pa.product_attach_gubun = 'p'
+        and p.product_name like '%'||#{value}||'%'
+	</select>
+	
+	<!-- 상품목록에서 보일 설명 & 대표사진 -->
+	<select id="selectProductList" parameterType="com.reum.product.ProductVO" resultMap="product_pic_11">	
+		select p.product_seq, p.product_name, p.product_description, p.product_price,
+		nvl(pa.product_attach_sysname, '000.jpg') as product_attach_sysname, l.loc_name, l.loc_seq
+		from product p, product_attach pa, location l
+		where p.product_status = 'c' and p.product_del = 'n' and p.cate_seq = #{cateSeq}
+		and p.loc_seq = l.loc_seq
+      	and p.product_seq = pa.product_seq
+      	and pa.product_attach_main = 'y'
+      	and pa.product_attach_gubun = 'p'
+      	<if test="mode.equals('row')">
+      		order by p.product_price
+      	</if>
+      	<if test="mode.equals('high')">
+      		order by p.product_price desc
+      	</if>
+      	<if test="mode.equals('regdate')">
+      		order by p.product_regdate
+      	</if>
+	</select>
+	
+	<!-- location기준으로 한 정렬 -->
+	<select id="selectLocationList" parameterType="String" resultMap="product_pic_11">	
+		select p.product_seq, p.product_name, p.product_description, p.product_price,
+		nvl(pa.product_attach_sysname, '000.jpg') as product_attach_sysname, l.loc_name, l.loc_seq
+		from product p, product_attach pa, location l
+		where p.product_status = 'c' and p.product_del = 'n' and l.loc_name = #{value}
+		and p.loc_seq = l.loc_seq
+      	and p.product_seq = pa.product_seq
+      	and pa.product_attach_main = 'y'
+      	and pa.product_attach_gubun = 'p'
+	</select>
+	
+	<!-- 상품detail에서 메인에 보일 설명 & 대표사진 -->
 	<select id="selectDetail" parameterType="int" resultMap="product_pic_11">	
 			select p.product_seq, p.product_name, p.product_price, p.product_del,
 			 pa.product_attach_sysname, pa.product_attach_ppath, pa.product_attach_pname, l.loc_name
 			from product p, product_attach pa, location l
 			where p.product_seq = pa.product_seq 
-     		and p.product_seq = #{value} 
+     		and p.product_seq = #{value}
       		and pa.product_attach_main = 'y' 
       		and p.loc_seq = l.loc_seq
 	</select>
@@ -252,7 +300,10 @@
 	</select>
 	
 	
-	
+	<select id="selectLocation" resultMap="locationMap">
+		 select loc_seq, loc_name
+         from location
+	</select>
 	
 
 </mapper>	

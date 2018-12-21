@@ -173,7 +173,8 @@ public class ProductInsertServlet extends HttpServlet {
 			// * DB close
 			//--------------------------------------------
 
-			response.sendRedirect("products.jsp");
+			//여기서 상품 올라왔는지 다시 뿌려줘야한다 list.
+			response.sendRedirect("index.jsp");
 		}
 
 	}

@@ -5,7 +5,6 @@
 
 <html>
 
-
 <!-- Script Include CSS START-->
 <%@ include file="/include/script.jsp"%>
 <!-- Script Include CSS END-->
@@ -22,7 +21,7 @@ $(document).ready(function(){
 		  		var userSeq = ${sessionScope.SESS_SEQ};
 		  		var sendData = {"productReplyContent":$("#content_reply").val(), "productSeq":${Product_VO.productSeq}, "userSeq":userSeq};	
 			 	console.log(sendData);
-									
+			 	
 				  $.ajax({ 
 							url:"/productReplyServlet",
 							type:"post",
@@ -69,8 +68,9 @@ $(document).ready(function(){
 		//"수정버튼" 클릭시 text로 활성화
 		$(document).on("click",".replyEdit",function(){ //글쓰기 버튼 --> 눌렀을 때 기존의 있는 내용을 불러오고 text로 활성화 된다.
 			var names = $(this).attr("name");
-			var arr = names.split("^^^");
-			//alert(arr[0] +","+arr[1]);
+			 var arr = names.split("^^^");
+
+			 //alert(arr[0] +","+arr[1]);
 			//입력된 글이 들어와야한다..!!!
 			var htmlStr = "<input type='hidden' id='updateReplySeq' value='"+arr[0]+"'>";
 			htmlStr += "<input type='text' style='border: none;  background-color: #FFFFFF;  font-size:12px; font-color:#666; word-wrap: break-word; width:600px;' name='' id='updateReplyContent' value='"+arr[1]+"'> ";	
@@ -123,18 +123,20 @@ $(document).ready(function(){
 				  	//div는 남겨두고 기존 댓글 내용만 지우기
 				  	$("#reply_list").empty();
 				  	$("#reply_list").html(htmlStr);
-				  	$("#replybtn").val(""); //왜 안비워지지?
+				  	$("#replybtn").val("");
 				}
 				}); //end of ajax
 			
 			
 		});
 		
+		
 });
+
 
 /* 수정된 댓글 뿌려주는 ajax  */
 function replyEditSubmit(){
-	var updateReplyContent = $("#updateReplyContent").val();
+	var updateReplyContent = $("#updateReplyContent").val(); 
 	var updateReplySeq = $("#updateReplySeq").val();
 	//ajax
 	//alert(updateReplyContent +","+updateReplySeq);
@@ -202,6 +204,12 @@ function replyEditSubmit(){
 	     return false;
 	 }
  }
+ 
+ function openNewWindow(){
+	 alert("클릭");
+     window.open("userProfileServlet?product_seq="+${Product_VO.productSeq} , "newWindow", "width=400, height=550, scrollbar=no");
+ }
+
 
 </script>
 </head>
@@ -239,7 +247,7 @@ function replyEditSubmit(){
 						<div id="gallery" class="span3">
 							<a href="themes/images/products/large/f1.jpg"
 								title='${Product_VO.productName}'> <img
-								src="/cdir/product/${Product_VO.productPicVO.productAttachSysname}"
+								src="/cdir/product/${Product_VO.productPicVO.productAttachSysname} "
 								style="width: 100%"
 								alt='${Product_VO.productPicVO.productAttachSysname}' />
 							</a>
@@ -253,7 +261,7 @@ function replyEditSubmit(){
 							<hr class="soft" />
 							<form class="form-horizontal qtyFrm">
 								<div class="control-group">
-									<label class="control-label"><span>${Product_VO.productPrice}원</span></label>
+									<label class="control-label"><input type="text" value="${Product_VO.productPrice}" readonly></label>
 									<div class="controls">
 										<input type="text" class="span1" value='${Product_VO.locName}'
 											readOnly />
@@ -268,6 +276,8 @@ function replyEditSubmit(){
 							<hr class="soft" />
 							<button class="btn btn-success dropdown-toggle"
 								data-toggle="dropdown">쪽지 하기</button>
+							<button class="btn btn-success dropdown-toggle" id="profileBtn" name="profileBtn" onclick="openNewWindow()"
+								data-toggle="dropdown">판매자 프로필</button>
 							<span class="badge badge-info pull-right"><h4>판매자평점:
 									8</h4></span>
 
@@ -296,7 +306,8 @@ function replyEditSubmit(){
 													<ul class="thumbnails">
 														<c:forEach var="pic" items="${Product_PIC.pvolist}">
 															<li class="span3"><img
-																src="/cdir/product/${pic.productAttachSysname}" alt="">
+																src="/cdir/product/${pic.productAttachSysname}" alt=""
+																style='width:240px; height:180px;'>
 															</li>
 														</c:forEach>
 													</ul>
@@ -344,7 +355,6 @@ function replyEditSubmit(){
 										        		</c:when>
 									                	</c:choose>
 										        </li>
-										        
 										        <li id="reply_input_span${reply.productReplySeq}">
 										        		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
 										        		<span id="reply_input_span${reply.productReplySeq}">${reply.productReplyContent}</span>
@@ -368,8 +378,7 @@ function replyEditSubmit(){
 									             <!--  댓글입력폼 -->
 												</c:when>
 									            </c:choose>
-									            
-									             
+
 									            
 															</div>
 														
@@ -429,7 +438,6 @@ function replyEditSubmit(){
 
 									</div>
 									<!-- 상품 상세 사진========================================================================== -->
-
 								</div>
 								<hr class="soften" />
 

@@ -62,6 +62,8 @@
 			from users
 			where user_seq = #{value}
 	</select>
+	
+	
 			
  	
 </mapper>	

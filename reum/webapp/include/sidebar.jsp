@@ -5,8 +5,9 @@
 		<ul id="sideManu" class="nav nav-tabs nav-stacked">
 			<li class="subMenu open"><a> ELECTRONICS [230]</a>
 				<ul>
-				<li><a class="active" href="products.jsp"><i class="icon-chevron-right"></i>Cameras (100) </a></li>
-				<li><a href="products.jsp"><i class="icon-chevron-right"></i>Computers, Tablets & laptop (30)</a></li>
+				<!-- 노가다로 서블릿주소 박아야겠네.. cate-seq는 실질적으로 부모cate를 바라봐야한다. -->
+				<li><a href="/productSideServlet?cate_seq=37&array=row"><i class="icon-chevron-right"></i>카메라</a></li>
+				<li><a class="active" href="products.jsp"><i class="icon-chevron-right"></i>Louis Bernard  </a></li>
 				<li><a href="products.jsp"><i class="icon-chevron-right"></i>Mobile Phone (80)</a></li>
 				<li><a href="products.jsp"><i class="icon-chevron-right"></i>Sound & Vision (15)</a></li>
 				</ul>

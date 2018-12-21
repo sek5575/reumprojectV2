@@ -9,6 +9,43 @@ import com.reum.common.MyBatisFactory;
 
 public class ProductDAO {
 	
+	public ArrayList<ProductVO> productSearch(String name) {
+		SqlSession conn = null;
+		ArrayList<ProductVO> list = null;
+		try {
+			conn = MyBatisFactory.getFactory().openSession();
+			list = (ArrayList)conn.selectList("productSpace.productSearch", name);
+		} finally {
+			conn.close();
+		}
+		return list;	
+	}
+
+	public ArrayList<ProductVO> selectProductList(ProductVO pvo) {
+		SqlSession conn = null;
+		ArrayList<ProductVO> list = null;
+		try {
+			conn = MyBatisFactory.getFactory().openSession();
+			list = (ArrayList)conn.selectList("productSpace.selectProductList", pvo);
+		} finally {
+			conn.close();
+		}
+		return list;	
+	}
+	
+	public ArrayList<ProductVO> selectLocationList(String loc) {
+		SqlSession conn = null;
+		ArrayList<ProductVO> list = null;
+		try {
+			conn = MyBatisFactory.getFactory().openSession();
+			list = (ArrayList)conn.selectList("productSpace.selectLocationList", loc);
+		} finally {
+			conn.close();
+		}
+		return list;	
+	}
+	
+	
 	public ProductVO selectDetail(int seq, SqlSession PRMCONN) {
 		ProductVO vo = PRMCONN.selectOne("productSpace.selectDetail", seq);
 		return vo;	
@@ -93,7 +130,6 @@ public class ProductDAO {
 	public ArrayList<CateGoryVO> selectCate(int seq) {
 		SqlSession conn = null;
 		ArrayList<CateGoryVO> list = null;
-		
 		try {
 			conn = MyBatisFactory.getFactory().openSession();
 			list = (ArrayList)conn.selectList("productSpace.selectCate", seq);
@@ -148,31 +184,17 @@ public class ProductDAO {
 		return vo;
 	}
 	
-//	public int mainPicChange(ProductPicVO vo, SqlSession PRMCONN) {
-//		int res = 0;
-//		try {
-//			res = PRMCONN.update("productSpace.mainPicChange", vo);
-//			PRMCONN.commit();
-//		}finally {
-//			PRMCONN.close();
-//		}
-//		return res;
-//	}
-	
-	
-//	public ProductVO selectReply(int seq) {
-//		SqlSession conn = null;
-//		ProductVO vo = null;
-//		
-//		try {
-//			conn = MyBatisFactory.getFactory().openSession();
-//			vo = conn.selectOne("productSpace.selectReply", seq);
-//		} finally {
-//			conn.close();
-//		}
-//		return vo;	
-//	}
-	
+	public ArrayList<LocationVO> selectLocation() {
+		SqlSession conn = null;
+		ArrayList<LocationVO> list = null;
+		try {
+			conn = MyBatisFactory.getFactory().openSession();
+			list = (ArrayList)conn.selectList("productSpace.selectLocation");
+		} finally {
+			conn.close();
+		}
+		return list;
+	}
 	
 
 
