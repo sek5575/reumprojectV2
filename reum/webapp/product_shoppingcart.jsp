@@ -43,14 +43,15 @@
 	<div class="span9">
     <ul class="breadcrumb">
 		<li><a href="index.jsp">Home</a> <span class="divider">/</span></li>
-		<li class="active"> 마이페이지</li><span class="divider">/</span>
-		<li class="active"> 거래내역조회</li>
+		<li class="active"> 마이페이지<span class="divider">/</span></li>
+		<li class="active"> 장바구니</li>
+		
     </ul>   
     
     <div class="span9">
  <ul class="nav nav-tabs" id="myTab">
-  <li class="active"><a href="#one" data-toggle="tab">일반상품 거래내역</a></li>
-  <li><a href="#two" data-toggle="tab">경매상품 거래내역</a></li>
+  <li class="active"><a href="#one" data-toggle="tab">일반상품 장바구니</a></li>
+  <li><a href="#two" data-toggle="tab">경매상품 장바구니</a></li>
 </ul>
 	<div id="myTabContent" class="tab-content">
 	<div class="tab-pane fade active in" id="home">
@@ -61,7 +62,7 @@
   
   <div class="tab-pane active" id="one">
   <div class="row-fluid">
-	 <div class="span12">	
+	 <div class="span12">	 
 	<hr class="soft"/>
 	
 	<table class="table table-bordered">
@@ -80,7 +81,7 @@
                 <tr>
                 <td><input type="checkbox" id="optionsCheckbox" value="option1"/></td>
                   <td> <img width="60" src="themes/images/products/4.jpg" alt=""/></td>
-                  <td>MASSA AST</td>
+                  <td style = "text-align:center;">MASSA AST</td>
 				  <td style = "text-align:center;">100,000</td>
                   <td style = "text-align:center;"><font color="red">판매완료</font></td>
                   <td style = "text-align:center;">2.7</td>
@@ -90,7 +91,7 @@
 				<tr>
 				<td><input type="checkbox" id="optionsCheckbox" value="option1"/></td>
                   <td> <img width="60" src="themes/images/products/4.jpg" alt=""/></td>
-                  <td>민석아 제대로하자</td>
+                  <td style = "text-align:center;">민석아 제대로하자</td>
 				  <td style = "text-align:center;">100,000</td>
                   <td style = "text-align:center;"><font color="green">판매중</font></td>
                   <td style = "text-align:center;">4.3</td>
@@ -100,7 +101,7 @@
 				<tr>
 				<td><input type="checkbox" id="optionsCheckbox" value="option1" /></td>
                   <td> <img width="60" src="themes/images/products/4.jpg" alt=""/></td>
-                  <td>MASSA AST</td>
+                  <td style = "text-align:center;">MASSA AST</td>
 				  <td style = "text-align:center;">100,000</td>
                   <td style = "text-align:center;"><font color="green">판매중</font></td>
                   <td style = "text-align:center;">4.1</td>
@@ -151,7 +152,7 @@
                 <tr>
                   <td><input type="checkbox" id="optionsCheckbox" value="option1"/></td>
                   <td> <img width="60" src="themes/images/products/4.jpg" alt=""/></td>
-                  <td><a href="auc_product_details.jsp">MASSA AST</a></td>
+                  <td style = "text-align:center;"><a href="auc_product_details.jsp">MASSA AST</a></td>
 				  <td style = "text-align:center;">100,000</td>
 				  <td style = "text-align:center;"><font color="red">경매마감</font></td>
                   <td style = "text-align:center;">4.7</td>
@@ -161,7 +162,7 @@
 				<tr>
 				<td><input type="checkbox" id="optionsCheckbox" value="option1"/></td>
                   <td> <img width="60" src="themes/images/products/4.jpg" alt=""/></td>
-                  <td>민석아 제대로하자</td>
+                  <td style = "text-align:center;">민석아 제대로하자</td>
 				  <td style = "text-align:center;">100,000</td>
 				   <td style = "text-align:center;"><font color="green">경매중</font></td>
                   <td style = "text-align:center;">4.7</td>
@@ -171,7 +172,7 @@
 				<tr>
 				<td><input type="checkbox" id="optionsCheckbox" value="option1"/></td>
                   <td> <img width="60" src="themes/images/products/4.jpg" alt=""/></td>
-                  <td>MASSA AST</td>
+                  <td style = "text-align:center;">MASSA AST</td>
 				  <td style = "text-align:center;">100,000</td>
 				   <td style = "text-align:center;"><font color="green">경매중</font></td>
                   <td style = "text-align:center;">4.7</td>

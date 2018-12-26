@@ -245,6 +245,7 @@ function myFilePreviewFunc2(e) {
 						<li><a href="products.jsp">Products</a> <span class="divider">/</span></li>
 						<li class="active">product register</li>
 					</ul>
+						<hr class="soft"/>
 					
 					<form method="post" action="/productInsertServlet" enctype="multipart/form-data">
 					
@@ -259,50 +260,89 @@ function myFilePreviewFunc2(e) {
 							<div class="invalid-feedback">사진 등록은 필수 입니다.</div>
 							<div id="prev-img-div1" class="form-group col-6"></div>
 						</div>
-						<div class="span6">
-						<!-- ====================== 상품명  =============================== -->
-							<input type="text" class="input-xlarge" id="productName" name="productName"
-								placeholder="상품명을 입력하세요">
-							<hr class="soft" />
-							<div class="form-horizontal qtyFrm">
-								<div class="control-group">							
-						<!-- ====================== 상품가격  =============================== -->
-									<span><input type="number" class="input-small" id="productPrice" name="productPrice">원</span>
-						<!-- ====================== 지역카테  =============================== -->
-									<select class="pull-right" id="locSeq" name="locSeq"> <!-- 이름 안맞으면 안들어간다.. -->
-										<option value="1">서울</option>
-										<option value="2">광주</option>
-										<option value="3">대구</option>
-										<option value="4">대전</option>
-									</select>
-									
-									
-									<select class="pull-right" id="cateSeq" name="cateSeq"> <!-- 처음 고정된 것으로 하드코딩으로 존재 -->
-										<option value="1">식품</option>
-										<option value="2">가구</option>
-										<option value="3">가전</option>
-										<option value="4">디지털</option>
-									</select>
-									<div class="catediv">
-										
-									</div>
-									
-									
-									<div class="catediv1">
-									</div>
-									
-									
-								</div>
-							</div>
+	<div class="span6">
+	<!-- ====================== 상품명  =============================== -->
+		<input type="text" class="input-xlarge" id="productName" name="productName"
+			placeholder="상품명을 입력하세요">
+		<hr class="soft" />
+		<div class="form-horizontal">
+			<div class="controls">							
+	<!-- ====================== 상품가격  =============================== -->
+				
+	<!-- ====================== 지역카테  =============================== -->
+				
+				<select class="pull-right" id="locSeq" name="locSeq"> <!-- 이름 안맞으면 안들어간다.. -->
+					<option value="1">서울</option>
+					<option value="2">광주</option>
+					<option value="3">대구</option>
+					<option value="4">대전</option>
+				</select>
+				
+				
+				
+				
+				
+			</div>
+		</div>
 
-							<hr class="soft" />
+		
+		
+		
+<span><input type="number" class="input-small" id="productPrice" name="productPrice">원</span>
 
-							<hr class="soft clr" />
 
-							<br class="clr" /> <a href="#" name="detail"></a>
-						</div>
 
+
+		<br class="clr" /> <a href="#" name="detail"></a>
+	</div>
+
+<div>
+
+
+<div class="controls pull-right">
+<hr class="soft" />
+
+              <select class="span2 cateSeq" id="cateSeq">
+                <option value="1">식품</option>
+                <option value="2">가구</option>
+                <option value="3">가전</option>
+                <option value="4">디지털</option>
+              </select>
+              
+              
+              <div class="catediv">
+              <!-- <select class="span2 catediv" id="catediv">
+                
+              </select> -->
+              
+              </div>
+              
+             <div class="catediv1">
+              <!-- <select class="span2 catediv1" id="catediv1">
+                
+              </select> -->
+              </div>
+              
+            </div>
+
+
+
+
+<hr class="soft" />
+</div>
+
+
+
+
+
+
+
+
+
+
+<br class="clr" />
 						<div class="span9">
+						<hr class="soft" />
 							<ul class="nav nav-tabs" id="myTab">
 								<li class="active"><a href="#one" data-toggle="tab">1.
 										상품정보</a></li>
@@ -317,7 +357,7 @@ function myFilePreviewFunc2(e) {
 													<h4>상품 상세정보</h4>
 									<!-- ====================== 상품상세정보  =============================== -->
 													<textarea class="input-xxlarge" id="productDescription" name="productDescription"
-														style="width: 800px; height: 200px"></textarea>
+														style="width: 855px; height: 200px"></textarea>
 												</div>
 											</div>
 										</div>
@@ -345,16 +385,11 @@ function myFilePreviewFunc2(e) {
 
 							</div>
 						</div>
+						<button class="btn pull-right" onclick="location.href='products.jsp'">취소</button>
 						<button class="btn btn-primary pull-right" id="registerBt">등록</button>
 					</div>
 					</form>
-					
-					<div class="row-fluid">
-						<div class="span12">
-							<button class="btn pull-right" onclick="location.href='products.jsp'">취소</button>
-						</div>
-					</div>
-					
+
 				</div>
 			</div>
 		</div>

@@ -15,22 +15,63 @@
 <%@ include file="/include/header.jsp" %>
 <!-- Header Include CSS END-->
 <script>
+
+/* function getParam(sname) {
+	var params = location.search.substr(location.search.indexOf("?") + 1);
+	var sval = "";
+	
+	params = params.split("&");
+	for (var i = 0; i < params.length; i++) {
+	console.log(params[i]);
+	temp = params[i].split("=");
+	
+	console.log(temp[i]+"&&&&&&&&&&&&&&&&&&");
+	
+	if ([temp[0]] == sname) { sval = temp[2]; }
+	}
+	return sval;
+} */
+
+/* function goPaging(currentPage) {
+	var mode = $("#array option:selected").val();
+    var sendData = {"mode":mode, "cateSeq":${param.cate_seq}, "currentPage":currentPage};
+    console.log(sendData);
+    return sendData;
+} */
+
+
 $(document).ready(function(){
+	
+	/* //url 에서 parameter 추출
+	currentPage = getParam("currentPage"); //[2]에서 current받는다.
+	if(currentPage == "") currentPage = 1;
+	console.log("-" + currentPage + "-");
+	
+	//페이지 로드 시 바로 실행
+	
+	var paging = {"mode":mode, "cateSeq":${param.cate_seq}, "currentPage":currentPage}; */
+	
+	
+	
 	$("#array").change(function(){
-		
-		//var text = $("#array option:selected").text();
 		var mode = $("#array option:selected").val();
+		//var text = $("#array option:selected").text();
 		var sendData = {"mode":mode, "cateSeq":${param.cate_seq}};	
-			 	console.log(sendData);
+			 	//console.log(sendData);
+			 	
 			 	
 				$.ajax({ 
-							url:"/productArrayServlet",
+							url:"/productArrayServlet?cate_seq="+${param.cate_seq}+"&array="+mode,
 							type:"post",
 							contentType: "application/x-www-form-urlencoded; charset=UTF-8",
 							data:JSON.stringify(sendData),
 							success:function(gsonObj){
 									console.log(gsonObj);
 									var htmlStr = "";
+									/* var htmlPagingStr = "";
+									var htmlPaging = gsonObj.MAP_PAGING;
+									var maplist = resMap.MAP_LIST; */
+									
 									htmlStr += "<div  style='background-color:#f9f9f9'>";
 						 			$.map(gsonObj, function(vv, idx){	
 						        	htmlStr += "<li class='span3'>";
@@ -48,6 +89,13 @@ $(document).ready(function(){
 						        	htmlStr += "</li>";
 
 							  	});
+						 			
+						 			//htmlPagingStr = htmlPaging;
+						 			
+						 		
+							  /* 	$("#pagingArea").empty();
+							  	$("#pagingArea").html(htmlPagingStr); */
+							  	
 							  	
 							  	$("#thumbnails").empty();
 							  	$("#thumbnails").html(htmlStr);
@@ -217,7 +265,7 @@ $(document).ready(function(){
             <div class="controls">
             
             <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-              <select class="span3" id="array">
+              <select class="span3" id="array">  <!-- onclick="goPaging()" -->
                 <option value="row">낮은 가격순</option>
                 <option value="high">높은 가격순</option>
                 <option value="regdate">등록일자순</option>
@@ -294,15 +342,19 @@ $(document).ready(function(){
 										        <c:when test="${not empty sessionScope.SESS_ID}">
 												 <button onclick="location.href='product_register.jsp'" class="btn btn-primary dropdown-toggle pull-right" data-toggle="dropdown">상품등록</button>
 												</c:when>
-												<c:otherwise>
-														
-									            </c:otherwise>
+									            </c:choose>
+									             <c:choose>
+										        <c:when test="${not empty sessionScope.SESS_ID}">
+												 <button onclick="location.href='product_register.jsp'" class="btn btn-primary dropdown-toggle pull-right" data-toggle="dropdown">상품평하기</button>
+												</c:when>
 									            </c:choose>
                
               </div>
               
-
-			<div class="pagination span6 pull-right" >
+			<%-- <div class="pagination span6 pull-right" id="pagingArea" >
+			${Page_HTML}
+			</div> --%>
+		<!-- 	<div class="pagination span6 pull-right" >
 			<ul>
 			<li><a href="#">&lsaquo;</a></li>
 			<li><a href="#">1</a></li>
@@ -312,7 +364,7 @@ $(document).ready(function(){
 			<li><a href="#">...</a></li>
 			<li><a href="#">&rsaquo;</a></li>
 			</ul>
-	</div>
+			</div> -->
 			
 			
 

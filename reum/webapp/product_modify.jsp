@@ -108,12 +108,6 @@ function myFilePreviewFunc1(e) {
 		//FileList into an array 
 		//var fileArr = Array.prototype.slice.call(files);			
 		var fileArr = Array.from(files); //[object File],[object File],[object File]
-			
-		/* if(fileArr.length > 3) {  //files.length
-				alert("이미지 첨부는 최대 3개만 가능합니다.");
-				$("#pname").val("");
-				return false;
-		} */
 		
 		var fileSize = 0;
 		fileArr.forEach(function(f) {   //fileArr forEach를 이렇게 돌리네

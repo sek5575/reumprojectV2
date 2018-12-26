@@ -1,4 +1,5 @@
 ﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -34,7 +35,7 @@
 </div>
 </div>
 
-<div id="carouselBlk">
+ <div id="carouselBlk">
 	<div id="myCarousel" class="carousel slide">
 		<div class="carousel-inner">
 		  <div class="item active">
@@ -62,7 +63,6 @@
 				  <h4>Second Thumbnail label</h4>
 				  <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
 				</div>
-			
 		  </div>
 		  </div>
 		   <div class="item">
@@ -271,11 +271,11 @@
 				</li>
 				<li class="span3">
 				  <div class="thumbnail">
-					<a href="product_details.jsp"><img src="themes/images/products/5.jpg" alt=""></a>
+					<a href="product_details.jsp  x"><img src="themes/images/products/5.jpg" alt=""></a>
 					<div class="caption">
 					  <h5>Product name</h5>
 					   <h4><a class="btn" href="product_details.jsp">VIEW</a> <span class="pull-right">$222.00</span></h4>
-					</div>
+					</div>  
 				  </div>
 				</li>
 			  </ul>

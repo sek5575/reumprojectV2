@@ -36,7 +36,7 @@ public class ProductModifyServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String saveDirectory = "c://uploads/product";
 
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(); 
 		String sess_id = session.getAttribute("SESS_ID").toString();  //sessionid가 없는 유저는 등록을 못하도록 막도록 코딩
 		int productSeq = 0;
 

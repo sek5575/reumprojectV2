@@ -14,7 +14,7 @@ import com.reum.users.UsersDAO;
 import com.reum.users.UsersVO;
 
 @WebServlet("/forgot")
-public class ForgotIdPw extends HttpServlet {
+public class UsersForgotIdPw extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
@@ -24,6 +24,7 @@ public class ForgotIdPw extends HttpServlet {
 		
 		UsersVO vo = new UsersVO();
 		
+
 		vo.setUserPhone(userphone);
 	
 		UsersDAO dao = new UsersDAO();//

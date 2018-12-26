@@ -12,8 +12,15 @@ public class ProductReplyVO {
 	private String rownum;
 	private String productReplyPassword;
 	private String sessionId;
+	private String userSysname;
 	
 	
+	public String getUserSysname() {
+		return userSysname;
+	}
+	public void setUserSysname(String userSysname) {
+		this.userSysname = userSysname;
+	}
 	public String getSessionId() {
 		return sessionId;
 	}

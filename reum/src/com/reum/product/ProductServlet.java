@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.ibatis.session.SqlSession;
 
 import com.reum.common.MyBatisFactory;
+import com.reum.common.PagingUtil;
 import com.reum.users.UsersDAO;
 import com.reum.users.UsersVO;
 
@@ -25,6 +26,7 @@ public class ProductServlet extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int seq = Integer.parseInt(request.getParameter("product_seq"));	
+		UsersDAO uao = new UsersDAO();
 		ProductDAO dao = new ProductDAO();
 		System.out.println(seq+"=상품Detail에서 seq");
 		
@@ -35,24 +37,40 @@ public class ProductServlet extends HttpServlet {
 			System.out.println("대표사진:"+vo.getProductPicVO().getProductAttachSysname());
 			
 			ProductVO deso = dao.selectDescription(seq, conn); 
-			System.out.println("첨부사진개수:"+deso.getPvolist().size());
+			if(deso != null) {
+				System.out.println("첨부사진개수:"+deso.getPvolist().size());
+			}
 			
 			ArrayList<ProductReplyVO> list = dao.selectReply(seq, conn);
 			System.out.println("댓글개수:"+list.size());
 			
-			ArrayList<ProductEvalVO> eval = dao.selectEval(seq, conn);
+			UsersVO userinfo = uao.selectSellerInfo(seq);
+			System.out.println(userinfo.getUserId() + " 유저 프로필 아이디");
+			
+			ArrayList<ProductEvalVO> eval = dao.selectEval(userinfo.getUserSeq(), conn);
 			System.out.println("평가개수:"+eval.size());
 			
-			UsersDAO uao = new UsersDAO();
+			double score = 0;
+			for(int i=0; i<eval.size(); i++) {
+				score += eval.get(i).getUserevalScore();
+			}
+			score = (score/eval.size());
+			double per = Double.parseDouble(String.format("%.2f",score));
+			
+			
 			SellerVO svo = dao.selectSeller(seq, conn); //svo -> seller_seq=null
 			UsersVO uid = uao.selectSellerId(svo.getSellerSeq(), conn);  //uid -> seller_id
-			System.out.println(uid.getUserId());
+			
 			
 			request.setAttribute("Product_EVAL", eval);
 			request.setAttribute("Product_REPLY", list);
-			request.setAttribute("Product_PIC", deso);
+			if(deso != null) {
+				request.setAttribute("Product_PIC", deso);
+			}
 			request.setAttribute("Product_VO", vo);
 			request.setAttribute("Seller_ID", uid);
+			request.setAttribute("User_INFO", userinfo);
+			request.setAttribute("score", per);
 			request.getRequestDispatcher("product_details.jsp").forward(request, response);
 			
 		} catch(Exception e) {

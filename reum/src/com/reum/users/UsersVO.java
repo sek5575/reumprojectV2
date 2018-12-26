@@ -19,7 +19,6 @@ public class UsersVO {
 	private int gradeSeq;
 	private String userPname;
 	private String userSysname;
-	
 	public int getUserSeq() {
 		return userSeq;
 	}

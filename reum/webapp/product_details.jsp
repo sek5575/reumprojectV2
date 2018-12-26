@@ -13,12 +13,39 @@
 <!-- Header Include CSS START-->
 <%@ include file="/include/header.jsp"%>
 <!-- Header Include CSS END-->
+
+
 <script>
 $(document).ready(function(){
 	
+	//사용자 프로필보기 :: 팝업 레이어 --------------------------------
+	  $("#layerPopup").hide();
+	  var viewLayerPopupToggle = false;
+	  
+	  $("#profileBtn").click(function(){
+		    if(viewLayerPopupToggle == false) {
+		    	$("#profileBtn").text("판매자 프로필 닫기")
+		    	$("#layerPopup").show();
+			    $("#layerPopup a").focus();
+			    viewLayerPopupToggle =true;
+			    return false;
+		    } else {
+		    	$("#profileBtn").text("판매자 프로필 보기")
+		    	$("#layerPopup").hide();
+			    viewLayerPopupToggle = false;
+			    return false;
+		    }
+	  });
+	
+	//------------------------------------------------------
+	
+	
 	//댓글 입력버튼 이벤트
 	$("#replybtn").click(function(){
-		  		var userSeq = ${sessionScope.SESS_SEQ};
+				var userSeq = 0;
+				if(${sessionScope.SESS_SEQ} != null){
+			  		userSeq = ${sessionScope.SESS_SEQ};
+				}
 		  		var sendData = {"productReplyContent":$("#content_reply").val(), "productSeq":${Product_VO.productSeq}, "userSeq":userSeq};	
 			 	console.log(sendData);
 			 	
@@ -35,7 +62,7 @@ $(document).ready(function(){
 						        	htmlStr += "<ul style='list-style:none;'>";
 						        	htmlStr += "<li style='height:6px'></li>";
 						        	htmlStr += "<li>";
-						        	htmlStr += "<img src='https://ssl.pstatic.net/static/cafe/cafe_pc/default/cafe_profile_77.png' width='32' height='32' alt='프로필' onerror='this.onerror=''; this.src=\"'https://ssl.pstatic.net/static/cafe/cafe_pc/default/cafe_profile_77.png'\">";
+						        	htmlStr += "<img src='/cdir/profile/"+vv.userSysname+"' width='32' height='32' alt='프로필'>";
 						        	htmlStr += "&nbsp; &nbsp; <font style='color: #666;word-wrap: break-word;'><b>"+vv.userId+"</b></font>";
 						        	htmlStr += "<font color='#f9f9f9'>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </font>";
 						        	htmlStr += "<font style='color: #666;word-wrap: break-word;'>"+vv.productReplyRegdate+"</font>";
@@ -74,7 +101,7 @@ $(document).ready(function(){
 			//입력된 글이 들어와야한다..!!!
 			var htmlStr = "<input type='hidden' id='updateReplySeq' value='"+arr[0]+"'>";
 			htmlStr += "<input type='text' style='border: none;  background-color: #FFFFFF;  font-size:12px; font-color:#666; word-wrap: break-word; width:600px;' name='' id='updateReplyContent' value='"+arr[1]+"'> ";	
-			htmlStr += "<span onClick=\"replyEditSubmit(this)\" class='replyEditSubmit' name=''><img  src='https://cafe.pstatic.net/cafe4/ico-btn-write.gif' width='10' height='10' alt=''>글쓰기</span>";
+			htmlStr += "<span onClick=\"replyEditSubmit()\" class='replyEditSubmit' name=''><img  src='https://cafe.pstatic.net/cafe4/ico-btn-write.gif' width='10' height='10' alt=''>글쓰기</span>";
 			
 			$("#reply_input_span"+arr[0]).empty();
 			$("#reply_input_span"+arr[0]).html(htmlStr);
@@ -99,7 +126,7 @@ $(document).ready(function(){
 			        	htmlStr += "<ul style='list-style:none;'>";
 			        	htmlStr += "<li style='height:6px'></li>";
 			        	htmlStr += "<li>";
-			        	htmlStr += "<img src='https://ssl.pstatic.net/static/cafe/cafe_pc/default/cafe_profile_77.png' width='32' height='32' alt='프로필' onerror='this.onerror=''; this.src=\"'https://ssl.pstatic.net/static/cafe/cafe_pc/default/cafe_profile_77.png'\">";
+			        	htmlStr += "<img src='/cdir/profile/"+vv.userSysname+"' width='32' height='32' alt='프로필'>";
 			        	htmlStr += "&nbsp; &nbsp; <font style='color: #666;word-wrap: break-word;'><b>"+vv.userId+"</b></font>";
 			        	htmlStr += "<font color='#f9f9f9'>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </font>";
 			        	htmlStr += "<font style='color: #666;word-wrap: break-word;'>"+vv.productReplyRegdate+"</font>";
@@ -158,7 +185,7 @@ function replyEditSubmit(){
 	        	htmlStr += "<ul style='list-style:none;'>";
 	        	htmlStr += "<li style='height:6px'></li>";
 	        	htmlStr += "<li>";
-	        	htmlStr += "<img src='https://ssl.pstatic.net/static/cafe/cafe_pc/default/cafe_profile_77.png' width='32' height='32' alt='프로필' onerror='this.onerror=''; this.src=\"'https://ssl.pstatic.net/static/cafe/cafe_pc/default/cafe_profile_77.png'\">";
+	        	htmlStr += "<img src='/cdir/profile/"+vv.userSysname+"' width='32' height='32' alt='프로필'>";
 	        	htmlStr += "&nbsp; &nbsp; <font style='color: #666;word-wrap: break-word;'><b>"+vv.userId+"</b></font>";
 	        	htmlStr += "<font color='#f9f9f9'>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </font>";
 	        	htmlStr += "<font style='color: #666;word-wrap: break-word;'>"+vv.productReplyRegdate+"</font>";
@@ -205,13 +232,24 @@ function replyEditSubmit(){
 	 }
  }
  
- function openNewWindow(){
-	 alert("클릭");
-     window.open("userProfileServlet?product_seq="+${Product_VO.productSeq} , "newWindow", "width=400, height=550, scrollbar=no");
- }
-
-
+ 
 </script>
+
+<style>
+<!-- 판매자 프로필 :: 레이어 팝업 스타일 -->
+#layerPopup{
+  padding:20px; 
+  border:4px solid #ddd; 
+  position:absolute; 
+  left:100px; 
+  top:100px; 
+  background:#fff;
+}
+
+#layerPopup button{
+  cursor:pointer;
+}
+</style>
 </head>
 
 <body>
@@ -252,16 +290,13 @@ function replyEditSubmit(){
 								alt='${Product_VO.productPicVO.productAttachSysname}' />
 							</a>
 
-
-
 						</div>
 						<div class="span6">
 							<h3>${Product_VO.productName}</h3>
-							<small> 뭔가 버리기 아까운거 같아 뭐라도 쓰자</small>
 							<hr class="soft" />
 							<form class="form-horizontal qtyFrm">
 								<div class="control-group">
-									<label class="control-label"><input type="text" value="${Product_VO.productPrice}" readonly></label>
+									<label class="control-label"><span>${Product_VO.productPrice}원</span></label>
 									<div class="controls">
 										<input type="text" class="span1" value='${Product_VO.locName}'
 											readOnly />
@@ -276,13 +311,29 @@ function replyEditSubmit(){
 							<hr class="soft" />
 							<button class="btn btn-success dropdown-toggle"
 								data-toggle="dropdown">쪽지 하기</button>
-							<button class="btn btn-success dropdown-toggle" id="profileBtn" name="profileBtn" onclick="openNewWindow()"
-								data-toggle="dropdown">판매자 프로필</button>
-							<span class="badge badge-info pull-right"><h4>판매자평점:
-									8</h4></span>
+								
+							<!-- ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ -->	
+							<button class="btn btn-success dropdown-toggle" id="profileBtn" name="profileBtn">판매자 프로필 보기</button>
+							<span class="badge badge-info pull-right"><h4>판매자평점: ${score}</h4></span>
 
 
 							<hr class="soft clr" />
+	<div id="layerPopup">
+   <div style="background-color:black"><img src="http://localhost:8006/themes/images/logo1.png">
+    </div><br>
+    <div class="col-12 col-md-6 col-lg-6">
+    <img height="100" width="200" src="/cdir/profile/${User_INFO.userSysname}"><br>
+         판매자아이디 : ${User_INFO.userId} <br>
+         이메일 : ${User_INFO.userEmail} <br>
+         핸드폰 : ${User_INFO.userPhone} <br>
+         주 판매장소: ${User_INFO.userAddress} / ${User_INFO.userDetailAddress} <br>
+    Score : ${score} <br><br>	 <!-- 판매자 평정은 추후에 넣기로... -->
+    </div>
+    <div class="col-12 col-md-6 col-lg-6" id="simple-map" style="height:350px; width:550px;"> 
+													
+													</div>		 
+  </div>
+  
 
 							<br class="clr" /> <a href="#" name="detail"></a>
 						</div>
@@ -315,6 +366,13 @@ function replyEditSubmit(){
 													<!-- 상품 상세 설명 ========================================================================== -->
 													<p>${Product_PIC.productDescription}</p>
 												</div>
+												
+												
+												
+												
+												<!--  지도 영역  =================================================================== -->
+												
+													
 											</div>
 										</div>
 
@@ -341,7 +399,7 @@ function replyEditSubmit(){
 										       
 										       <li style="height:6px"></li>
 										       <li>
-										        	<img src="https://ssl.pstatic.net/static/cafe/cafe_pc/default/cafe_profile_77.png" width="32" height="32" alt="프로필" onerror="this.onerror=''; this.src='https://ssl.pstatic.net/static/cafe/cafe_pc/default/cafe_profile_77.png'">
+										        	<img src="/cdir/profile/${reply.userSysname}" width="32" height="32" alt="프로필">
 										        	&nbsp; &nbsp; <font style="color: #666;word-wrap: break-word;"><b>${reply.userId}</b></font> 
 										        	<font color="#f9f9f9">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </font>
 										        	<font style="color: #666;word-wrap: break-word;">${reply.productReplyRegdate}</font>
@@ -422,6 +480,11 @@ function replyEditSubmit(){
 										</div>
 										
 										
+										
+									
+										
+										
+										
 										<button type="button" class="btn pull-right"
 											onclick="location.href='products.jsp'">뒤로가기</button>
 										
@@ -454,7 +517,29 @@ function replyEditSubmit(){
 	<!-- Footer Include CSS START-->
 	<%@ include file="/include/footer.jsp"%>
 	<!-- Footer Include CSS END-->
+	
+<script src="http://maps.google.com/maps/api/js?key=AIzaSyD_Hz_uYHAvh3-ETmGyNfPg3IykZ56ZAdY&libraries=places&callback=initAutocomplete" async defer></script>
+  <script src="/themes/js/gmaps.js"></script>
+  <script>
+  //https://fatc.club/2017/06/05/1949
+  //https://developers.google.com/maps/documentation/javascript/examples/geocoding-simple?hl=ko
 
+  function initAutocomplete() {
+        
+        var locate = {lat:${Seller_ID.userLat}, lng:${Seller_ID.userLng}};
+        // The map, centered at Uluru
+        var resultMap = new google.maps.Map(
+            document.getElementById('simple-map'),
+            {zoom: 15, center: locate});
+        // The marker, center locate
+        var marker = new google.maps.Marker({
+      			   position: locate,
+      			   map: resultMap
+      			});
+    
+    
+  }
+  </script>
 
 </body>
 </html>

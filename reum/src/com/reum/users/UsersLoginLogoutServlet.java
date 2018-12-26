@@ -15,13 +15,12 @@ import javax.servlet.http.HttpSession;
  * Servlet implementation class LoginLogoutServlet
  */
 @WebServlet("/login")
-public class LoginLogoutServlet extends HttpServlet {
+public class UsersLoginLogoutServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
   
 	//private Logger logger = Logger.getLogger(MemberServlet.class);   
 
-   /* 
-    * //로그아웃
+   
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
 		response.getWriter().append("Served at: ").append(request.getContextPath());
@@ -40,7 +39,7 @@ public class LoginLogoutServlet extends HttpServlet {
 		//request.getRequestDispatcher("http://google.com").forward(request, response); //내 프로젝트 자원 가져오는것 , 밖에서 가져오지 못한다.
 	
 	}
-	*/
+	
 
 	
 	
@@ -56,6 +55,7 @@ public class LoginLogoutServlet extends HttpServlet {
 		
 		vo.setUserId(userid);
 		vo.setUserPw(userpw);
+	
 		UsersDAO dao = new UsersDAO();//
 		UsersVO uvo = dao.select(vo);
 		
@@ -84,8 +84,9 @@ public class LoginLogoutServlet extends HttpServlet {
 			
 	        
 			if(uvo.getUserGubun().equals("u")) {
-//				request.getRequestDispatcher("index.jsp");//.forward(request, response);
 				response.sendRedirect("index.jsp");
+				//request. getRequestDispatcher("index.jsp");//.forward(request, response);
+				//response.sendRedirect("index.jsp");
 				System.out.println("성공");
 
 			}else if (uvo.getUserGubun().equals("a")) {
@@ -97,7 +98,7 @@ public class LoginLogoutServlet extends HttpServlet {
 		}else {
 
 		System.out.println("실패");
-		request.getRequestDispatcher("404.jsp").forward(request, response);
+		request.getRequestDispatcher("login.jsp").forward(request, response);
 		
 		
 		

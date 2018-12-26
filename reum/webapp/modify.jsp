@@ -20,56 +20,59 @@
 <script>
 $(document).ready(function(){
 	
-	//jQuery 지원 : 첨부파일 미리보기 ---------------------
-	$("#userPname").on("change", myFilePreviewFunc);
-	//$("#pname").change(function(){
-	function myFilePreviewFunc(e) {
-			$("#preview").empty();
-			var files = e.target.files;  			//[object FileList]
-			//FileList into an array 
-			//var fileArr = Array.prototype.slice.call(files);			
-			var fileArr = Array.from(files); //[object File],[object File],[object File]
-				
-			if(fileArr.length > 3) {  //files.length
-					alert("이미지 첨부는 최대 3개만 가능합니다.");
-					$("#userPname").val("");
-					return false;
-			}
-			
-			var fileSize = 0;
-			fileArr.forEach(function(f) {
-					fileSize += f.size;
-			});
-			if(fileSize > 10*1024*1024) {
-					alert("이미지 첨부는 최대 10MB만 가능합니다.");
-					$("#userPname").val("");
-					return false;
-			}
-			
-			fileArr.forEach(function(f) {
-					if(!f.type.match("image.*")) {
-							alert("이미지 첨부만 가능합니다.");
-							$("#userPname").val("");
-							return false;
-					} 
+		//jQuery 지원 : 첨부파일 미리보기 ---------------------
+		$("#userPname").on("change", myFilePreviewFunc);
+		//$("#pname").change(function(){
+		function myFilePreviewFunc(e) {
+				$("#preview").empty(); 
+				var files = e.target.files;  			//[object FileList]
+				//FileList into an array 
+				//var fileArr = Array.prototype.slice.call(files);			
+				var fileArr = Array.from(files); //[object File],[object File],[object File]
 					
-					var reader = new FileReader();
-					var htmlStr = "";
-					reader.onload = function(e) {
-							htmlStr += "<img src='"+e.target.result+"' style='height:150px;width:150px;'> ";
-							$("#preview").append(htmlStr);
-							//alert(htmlStr)
-					}
-					//reader.onload = function(e) { 
-					//	$("#prev-img").attr("src", e.target.result); 
-					//} 
-					reader.readAsDataURL(f); 
-			}); //end of forEach
-	}
- $("#regButton").click(function(){
+				if(fileArr.length > 3) {  //files.length
+						alert("이미지 첨부는 최대 3개만 가능합니다.");  
+						$("#userPname").val("");
+						return false;
+				}
+				
+				var fileSize = 0;
+				fileArr.forEach(function(f) {
+						fileSize += f.size;
+				});
+				if(fileSize > 10*1024*1024) {
+						alert("이미지 첨부는 최대 10MB만 가능합니다.");
+						$("#userPname").val("");
+						return false;
+				}
+				
+				fileArr.forEach(function(f) {
+						if(!f.type.match("image.*")) {
+								alert("이미지 첨부만 가능합니다.");
+								$("#userPname").val("");
+								return false;
+						} 
+						
+						var reader = new FileReader();
+						var htmlStr = ""; 
+						reader.onload = function(e) {
+								htmlStr += "<img src='"+e.target.result+"' style='height:150px;width:150px;'> ";
+								$("#preview").append(htmlStr);
+								//alert(htmlStr)
+						}
+						//reader.onload = function(e) { 
+						//	$("#prev-img").attr("src", e.target.result); 
+						//} 
+						reader.readAsDataURL(f); 
+				}); //end of forEach
+		}
+
+		
+		//회원정보 수정폼 입력값 유효성(validation) 체크 ---------------------
+	  $("#editButton").click(function(){
 		  	var id =$("#userId").val();
 			  var pw =$("#userPw").val();
-			  var pw2 =$("#userPw2").val();
+			  var pw2 =$("#userPw").val();
 			  var agree = $("[id='agree']:checked").val();
 			  if(id == "") {
 				  	alert("아이디를 입력하세요")
@@ -81,14 +84,25 @@ $(document).ready(function(){
 		    		return false;
 			  } else if(pw != pw2) {
 		    		alert("비밀번호가 다릅니다.")
-		    		$("#userPw").focus();
+		    		$("#user_pw").focus();
 		    		return false;
-	    	} else if(agree != 'y'){
-		    		alert("약관 동의 체크하세요.")
-		    		$("#agree").focus();
-		    		return false;
-	    	}
-	    	$("#regForm").submit();
+	    	} 			  
+			  $("#modifiyForm").attr("action" , "/edit");
+			  $("#modifiyForm").attr("method" , "post");
+			  $("#modifiyForm").submit();
+	  });
+		
+	//회원정보 삭제 ---------------------
+	  $("#delButton").click(function(){
+			  var result = confirm('정말 탈퇴하시겠습니까?'); 
+			  if(result) { //yes  
+			  		$(location).attr('href', '/pwcheck.jsp?mode=del');
+			  }
+			 /*  
+			  $("#regForm").attr("action" , "/del");
+			  $("#regForm").attr("method" , "get");  //post
+		  	$("#regForm").submit(); 
+		   */
 	  });
 });    
 </script>
@@ -110,18 +124,18 @@ $(document).ready(function(){
 		<div class="container">
 			<div class="row">
 
-				<!-- sidebar Include CSS START-->
-				<%@ include file="/include/sidebar.jsp"%>
-				<!-- sidebar Include CSS END-->
+		<!-- sidebar Include CSS START-->
+<%@ include file="/include/usersidebar.jsp" %>
+<!-- sidebar Include CSS END-->
 
 				<div class="span9">
 					<ul class="breadcrumb">
 						<li><a href="index.jsp">Home</a> <span class="divider">/</span></li>
-						<li class="active">Registration</li>
+						<li class="active">Modification</li>
 					</ul>
-					<h3>회원가입</h3>
+					<h3>회원정보 수정</h3>
 					<div class="well">
-						<form id="regForm" method="POST" action="/register" class="form-horizontal" enctype="multipart/form-data">
+						<form id="modifiyForm" class="form-horizontal" enctype="multipart/form-data">
 							<h4>
 								회원 정보
 								입력&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
@@ -134,30 +148,32 @@ $(document).ready(function(){
 								&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
 								<sup>*</sup>&nbsp&nbsp필수 입력
 							</h4>
-
+						    <input type="hidden" value="${USERS.userPname}" name="userOldPname">
+							<input type="hidden" value="${USERS.userPpath}" name="userOldPPath">
+							<input type="hidden" value="${USERS.userSysname}" name="userOldSysname"> 
 							<div class="control-group">
 								<label class="control-label" for="userId"> 아이디 <sup>*</sup></label>
 								<div class="controls">
-									<input type="text" id="userId" name="userId" placeholder="아이디 ">
+									<input type="text" id="userId" name="userId" value="${USERS.userId}" readonly>
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="userName">이름 <sup>*</sup></label>
 								<div class="controls">
-									<input type="text" id="userName" name="userName" placeholder="이름 ">
+									<input type="text" id="userName" name="userName" value="${USERS.userName}" readonly>
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="userEmail">이메일 <sup>*</sup></label>
 								<div class="controls">
-									<input type="text" width="400" id="userEmail" name="userEmail"
-										placeholder="abc123@google.com">
+									<input type="text" width="400" id="userEmail" name="userEmail" value="${USERS.userEmail}"
+										>
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="userPw">비밀번호 <sup>*</sup></label>
 								<div class="controls">
-									<input type="password"  id="userPw" name="userPw" placeholder="비밀번호">
+									<input type="password"  id="userPw" name="userPw" value="${USERS.userPw}">
 								</div>
 							</div>
 							<div class="control-group">
@@ -166,20 +182,21 @@ $(document).ready(function(){
 								</label>
 								<div class="controls">
 									<input type="password"  id="userPw2" name="userPw2"
-										placeholder="비밀번호 확인">
+										value="${USERS.userPw}">
 								</div>
 							</div>
 							
 							<div class="control-group">
 							<label class="control-label" for="userPname">프로필 사진<sup>*</sup></label>
 							<div class="controls">		                    
-		                    <input id="userPname" type="file"  name="userPname"> <!--  multiple -->
+		                    <input id="userPname" type="file"  name="userPname" > <!--  multiple -->
 		                    <div class="invalid-feedback">
 		                    		사진 등록은 필수 입니다.
 		                    </div>
 		                  </div>
 		                  <div class="control-group">
 		                  <div class="controls" id="preview" >
+		                  		<img src="/cdir/profile/${USERS.userSysname}" style="height:150px;width:150px;">                 
 		                   		<!-- <img id="prev-img" style="height:100px;width:100px;"> -->
 		                  </div>
 									</div>
@@ -190,12 +207,12 @@ $(document).ready(function(){
 								개인정보 입력 여부를 다시 한번 확인해주세요. <br></br>Ex)비밀번호 일치 여부, 아이디 중복여부,
 								아이디와 이름은 회원정보 수정이 불가능합니다 
 							</div>
-
+      
 							<h4>주소 입력</h4>
 							<div class="control-group">
 								<label class="control-label" for="userPhone">핸드폰번호<sup>*</sup></label>
 								<div class="controls">
-									<input type="text"  id="userPhone" name="userPhone" placeholder="핸드폰번호" /> <span></span>
+									<input type="text"  id="userPhone" name="userPhone"  readonly value="${USERS.userPhone}"> <span></span>
 								</div>
 							</div>
 
@@ -232,7 +249,7 @@ $(document).ready(function(){
 								<div class="control-group">
 									<label class="control-label" for="location">지역 카테고리 설정<sup>*</sup></label>
 									<div class="controls">
-										<select id="location">
+										<select id="location" name="location">
 											<option value="">선택</option>
 											<option value="1">서울</option>
 											<option value="2">광주</option>
@@ -248,54 +265,25 @@ $(document).ready(function(){
 									</div>
 								</div>
 
-								<div class="control-group">
-									<label class="control-label" for="dealplace">거래 장소 <sup>*</sup></label>								 
-									<div class="controls">
-										<input type="text"  id="dealplace" name="dealplace"
-											placeholder="직거래장소명을 입력하세요" /> <a href="http://maps.google.com/" target="_blank">Google Map</a> 
-									</div>
-									</div>
-									
-									<div class="alert alert-block alert-error fade in">
+								
+								
+								<div class="alert alert-block alert-error fade in">
 								<button type="button" class="close" data-dismiss="alert">×</button>
 								<strong>※주의사항※</strong> 거래 장소는 회원정보 수정에서 변경 할 수 없고 중고 상품 판매 등록시에 직거래 장소를 변경해서 입력 할 수 있습니다.
 							</div>
-								
-								
-								<div class="control-group">
-									<label class="control-label" for="userLat">위도 <sup></sup></label>									 
-									<div class="controls">
-										<input type="text"  id="userLat" readonly name="userLat" 
-											placeholder="" /> 
-									</div>
-								</div>
-								<div class="control-group">
-									<label class="control-label" for="userLat">경도 <sup></sup></label>									 
-									<div class="controls">
-										<input type="text"  id="userLng" readonly name="userLng" 
-											placeholder="" /> 
-									</div>
-								</div>
-                      			
+								</div>  
+								    			
 							
-                   			 </div>
-								 <div class="control-group">								 
-                    			<div class="controls">
-                     			 <input type="checkbox" name="agree" class="custom-control-input" id="agree" value="y">&nbsp&nbsp&nbsp 위 약관에 동의합니다.                    			
-                    			</div>
-                  				</div>
-
+                   			   
+								
 
 
 								<div class="control-group">
 									<div class="controls">
-										<input type="hidden" name="email_create" value="1"> 
-										<input type="hidden" name="is_new_customer" value="1"> 
-										<input id="regButton" class="btn btn-large btn-success" type="submit" value="회원가입" />
+									
+										<input id="editButton" class="btn btn-large btn-success" type="button" value="회원수정" />										
 										
-										<input type="hidden" name="email_create" value="1"> 
-										<input type="hidden" name="is_new_customer" value="1"> 
-										<input class="btn btn-large btn-danger" type="submit" value="취소" />
+										<input id="delButton"class="btn btn-large btn-danger" type="button" value="회원탈퇴" />
 									</div>
 								</div>
 						</form>

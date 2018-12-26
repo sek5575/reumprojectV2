@@ -196,6 +196,34 @@ public class ProductDAO {
 		return list;
 	}
 	
+	public int selectCount() {
+		int res = 0;
+		SqlSession conn = null;
+		try {
+			conn = MyBatisFactory.getFactory().openSession();  //MyBatisFactory.getFactory() 중앙에서 관리해주는 기능 ==> 싱글턴
+			res = conn.selectOne("productSpace.selectCount");
+		} finally {
+			conn.close();
+		}
+		return res;
+		
+	}
+	
+	
+	
+	public ArrayList<ProductVO> selectPagingProductList(ProductVO pvo) {
+		SqlSession conn = null;
+		ArrayList<ProductVO> list = null;
+		try {
+			conn = MyBatisFactory.getFactory().openSession();
+			list = (ArrayList)conn.selectList("productSpace.selectPagingProductList", pvo);
+		} finally {
+			conn.close();
+		}
+		return list;	
+	}
+	
+	
 
 
 }

@@ -22,6 +22,29 @@ private ArrayList<ProductPicVO> pvolist;
 private String mode;
 
 
+private int currentPage;
+private int startSeq;
+private int endSeq;
+
+
+public int getCurrentPage() {
+	return currentPage;
+}
+public void setCurrentPage(int currentPage) {
+	this.currentPage = currentPage;
+}
+public int getStartSeq() {
+	return startSeq;
+}
+public void setStartSeq(int startSeq) {
+	this.startSeq = startSeq;
+}
+public int getEndSeq() {
+	return endSeq;
+}
+public void setEndSeq(int endSeq) {
+	this.endSeq = endSeq;
+}
 public String getMode() {
 	return mode;
 }

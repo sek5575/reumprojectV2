@@ -17,6 +17,8 @@
 		<result property="userPost" 			column="user_post" />
 		<result property="userPhone" 			column="user_phone" />
 		<result property="userPpath" 			column="user_ppath" />
+		<result property="userPname" 			column="user_pname" />
+		<result property="userSysname" 			column="user_sysname" />
 		<result property="userAddress" 			column="user_address" />
 		<result property="userDetailAddress" 	column="user_detail_address" />
 		<result property="userGubun" 			column="user_gubun" />
@@ -24,11 +26,15 @@
 		<result property="userLng" 				column="user_lng" />
 		<result property="userDel" 				column="user_del" />
 		<result property="gradeSeq" 			column="grade_seq" />
+		<result property="productSeq" 			column="product_seq" />
 	</resultMap>
 	
-	
+	<resultMap id="sellerMap" type="com.reum.product.SellerVO">
+		<result property="sellerSeq"	   		column="seller_seq" />
+		<result property="productSeq" 			column="product_seq" />
+	</resultMap>
 
-	<select id="login" 
+	<select id="users_login" 
 			parameterType="com.reum.users.UsersVO"  
 			resultMap="usersMap">
  			select *
@@ -37,15 +43,48 @@
 			and user_del='n'
  	</select>
  	
-	<select id="forgotid"
+ 	<insert id="users_register" 
+ 	parameterType="com.reum.users.UsersVO">
+ 			insert into users
+ 			(user_seq,user_id,user_pw,user_regdate,user_name,user_email,user_post,user_phone,user_ppath,user_pname,user_sysname,
+ 			user_address,user_detail_address,user_gubun,user_lat,user_lng,user_del,grade_seq)
+			values
+			(users_seq.nextval,#{userId},#{userPw},sysdate,#{userName},#{userEmail},#{userPost},#{userPhone},#{userPpath},			
+			#{userPname},#{userSysname},#{userAddress},#{userDetailAddress},'u',#{userLat},#{userLng},'n',1
+			)
+ 	</insert> 	 	
+ 	
+ 	<select id="users_forgotid"
  			parameterType="com.reum.users.UsersVO"  
 			resultMap="usersMap">
- 			select user_seq
+ 			select user_id
 			from users
 			where user_phone=#{userPhone};
 	</select>
 	
-	<!-- seller에 insert 하기 위해서 만든 select -->
+	<update id="users_update" parameterType="com.reum.users.UsersVO">
+			update users
+			set user_pw=#{userPw}, user_email=#{userEmail}, user_ppath=#{userPpath}, user_pname=#{userPname}, user_sysname=#{userSysname},
+			user_post=#{userPost},user_address=#{userAddress},user_detail_address=#{userDetailAddress}
+			where user_id=#{userId} and USER_DEL='n'
+ 	</update>
+ 	<update id="users_delete" parameterType="String">
+			update users
+			set USER_GUBUN='u', USER_DEL='y'
+			where user_id=#{value} and USER_DEL='n'
+  </update>
+  
+  <select id="users_detail" parameterType="String" 
+  				resultMap="usersMap"
+  				>
+		select  user_seq, user_id ,user_name,user_phone,user_pw
+		,user_post,user_address,user_detail_address
+		,user_email,user_gubun, user_ppath,user_pname,user_sysname
+		from users
+		where user_id=#{value} and USER_DEL='n'
+  </select>
+  
+  <!-- seller에 insert 하기 위해서 만든 select -->
 	<select id="selectUserSeq"
 			parameterType="String"
 			resultMap="usersMap">
@@ -58,12 +97,22 @@
 	<select id="selectSellerId"
 			parameterType="int"
 			resultMap="usersMap">
-			select user_id
+			select user_id, user_lat, user_lng
 			from users
 			where user_seq = #{value}
 	</select>
 	
-	
-			
+	<!-- 프로필보기 -->
+	<select id="selectSellerInfo"
+			parameterType="int"
+			resultMap="usersMap">
+			select u.user_id, u.user_seq, u.user_email, u.user_phone, u.user_address, u.user_detail_address, u.user_sysname
+			from users u, seller s, product p
+			where u.user_seq = s.seller_seq and s.product_seq = p.product_seq
+			and p.product_seq = #{value}
+	</select>
+		
  	
+ 	
+	
 </mapper>	
